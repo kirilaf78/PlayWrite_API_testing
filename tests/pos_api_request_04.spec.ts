@@ -1,5 +1,5 @@
 import { test, expect, APIResponse } from '@playwright/test';
-import postRequest from '../test-data/post_dynamic_request_body.json';
+import bookingAPIRequestBody from '../test-data/post_dynamic_request_body.json';
 import { stringFormat } from '../utils/common';
 
 interface BookingDates {
@@ -21,9 +21,12 @@ interface PostAPIResponseBody {
 }
 
 test("Create POST API request using dynamic JSON file in Playwright", async ({ request }) => {
+ const dynamicRequestBody = stringFormat(JSON.stringify(bookingAPIRequestBody), "cypress", "js", "apple");
+ console.log(dynamicRequestBody)
+
   // Create POST API request using Playwright with JSON file data
   const postAPIResponse: APIResponse = await request.post('/booking', {
-    data: postRequest,
+    data: JSON.parse(dynamicRequestBody)
   });
 
   // Validate the status code
@@ -38,11 +41,15 @@ test("Create POST API request using dynamic JSON file in Playwright", async ({ r
   // Validate API response JSON object
   expect(postAPIResponseBody.booking).toHaveProperty(
     'firstname',
-    'testers talk playwright'
+    'cypress'
   );
   expect(postAPIResponseBody.booking).toHaveProperty(
     'lastname',
-    'testers talk api testing'
+    'js'
+  );
+  expect(postAPIResponseBody.booking).toHaveProperty(
+    'additionalneeds',
+    'apple'
   );
 
   // Validate API response nested JSON object (bookingdates)
