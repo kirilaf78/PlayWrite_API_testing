@@ -3,6 +3,7 @@ import bookingAPIRequestBody from "../test-data/post_dynamic_request_body.json";
 import { stringFormat } from "../utils/common";
 import tokenRequestBody from "../test-data/token_request_body.json";
 import putRequestBody from "../test-data/put_request_body.json";
+import patchRequestBody from "../test-data/patch_request_body.json"
 
 interface BookingDates {
   checkin: string;
@@ -23,7 +24,7 @@ interface PostAPIResponseBody {
   booking: Booking;
 }
 
-test("Create PUT API request in Playwright", async ({ request }) => {
+test("Create PATCH API request in Playwright", async ({ request }) => {
   const dynamicRequestBody = stringFormat(
     JSON.stringify(bookingAPIRequestBody),
     "cypress",
@@ -83,22 +84,22 @@ test("Create PUT API request in Playwright", async ({ request }) => {
   const tokenNo = tokenAPIResponseBody.token;
   console.log(tokenNo);
 
-  // PUT API call
+  // PATCH API call
 
-  const putAPIResponse: APIResponse = await request.put(`/booking/${bId}`, {
+  const patchAPIResponse: APIResponse = await request.patch(`/booking/${bId}`, {
     headers: {
       "Content-Type": "application/json",
       Cookie: `token= ${tokenNo}`,
     },
-    data: putRequestBody,
+    data: patchRequestBody,
   });
-  console.log("++PUT Response+++++++++++++++++++++++++++++++++++");
-  console.log(putAPIResponse);
-  console.log("++PUT Response Json+++++++++++++++++++++++++++++++");
+  console.log("++Patch Response+++++++++++++++++++++++++++++++++++");
+  console.log(patchAPIResponse);
+  console.log("++PATCH Response Json+++++++++++++++++++++++++++++++");
 
-  const putResponseBody = await putAPIResponse.json();
-  console.log(putResponseBody);
+  const patchResponseBody = await patchAPIResponse.json();
+  console.log(patchResponseBody);
 
   //Validate status code
-  expect(putAPIResponse.status()).toBe(200);
+  expect(patchAPIResponse.status()).toBe(200);
 });
