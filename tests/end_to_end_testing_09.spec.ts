@@ -2,7 +2,7 @@ import { test, expect, APIResponse } from "@playwright/test";
 import bookingAPIRequestBody from "../test-data/post_dynamic_request_body.json";
 import { stringFormat } from "../utils/common";
 import tokenRequestBody from "../test-data/token_request_body.json";
-import patchRequestBody from "../test-data/patch_request_body.json"
+import patchRequestBody from "../test-data/patch_request_body.json";
 
 interface BookingDates {
   checkin: string;
@@ -23,7 +23,7 @@ interface PostAPIResponseBody {
   booking: Booking;
 }
 
-test("Create PATCH API request in Playwright", async ({ request }) => {
+test("Create DELETE API request in Playwright", async ({ request }) => {
   const dynamicRequestBody = stringFormat(
     JSON.stringify(bookingAPIRequestBody),
     "cypress",
@@ -101,4 +101,23 @@ test("Create PATCH API request in Playwright", async ({ request }) => {
 
   //Validate status code
   expect(patchAPIResponse.status()).toBe(200);
+
+  // Delete API
+  console.log("++Delete+++++++++++++++++++++++++++++++");
+
+  const deleteAPIResponse: APIResponse = await request.delete(
+    `/booking/${bId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token= ${tokenNo}`,
+      },
+    }
+  );
+  // const deleteResponseBody = await deleteAPIResponse.json();
+  console.log(deleteAPIResponse);
+
+  //Validate status code
+  expect(deleteAPIResponse.status()).toBe(201);
+  expect(deleteAPIResponse.statusText()).toBe("Created");
 });
